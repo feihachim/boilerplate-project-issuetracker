@@ -87,7 +87,7 @@ module.exports = function (app) {
       if (open) {
         issueList = issueList.filter((element) => element.open === open);
       }
-      console.log({ issueList });
+      // console.log({ issueList });
       res.send(issueList);
     })
 
@@ -127,9 +127,27 @@ module.exports = function (app) {
 
     .put(function (req, res) {
       let project = req.params.project;
+      let issueList = projectsArray.filter(
+        (element) => element.name === project
+      )[0].value;
     })
 
     .delete(function (req, res) {
       let project = req.params.project;
+      let issueList = projectsArray.filter(
+        (element) => element.name === project
+      )[0].value;
+      const _id = req.body._id ?? undefined;
+      if (!_id) {
+        res.send({ error: "missing _id" });
+        return;
+      }
+      const issue = issueList.filter((element) => element._id === _id);
+      if (issue.length === 0) {
+        res.send({ error: "could not delete", _id: _id });
+        return;
+      }
+      issueList = issueList.filter((element) => element._id !== _id);
+      res.send({ result: "successfully deleted", _id: _id });
     });
 };

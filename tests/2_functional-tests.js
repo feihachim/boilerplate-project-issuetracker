@@ -95,4 +95,54 @@ suite("Functional Tests", function () {
         done();
       });
   });
+  // #7
+  // #8
+  // #9
+  // #10
+  // #11
+  // #12
+  test("delete an issue", function (done) {
+    let issue;
+    chai
+      .request(server)
+      .post("/api/issues/apitest")
+      .send({
+        issue_title: "test delete",
+        issue_text: "issue to delete",
+        created_by: "John SMith",
+      })
+      .end(function (err, res) {
+        issue = res.body;
+        chai
+          .request(server)
+          .delete("/api/issues/apitest")
+          .send({ _id: issue._id })
+          .end(function (err, res) {
+            assert.equal(res.body.result, "successfully deleted");
+          });
+        done();
+      });
+  });
+  // #13
+  test("delete an issue with an invalid _id", function (done) {
+    chai
+      .request(server)
+      .delete("/api/issues/apitest")
+      .send({ _id: "geronimo" })
+      .end(function (err, res) {
+        assert.equal(res.body.error, "could not delete");
+        assert.equal(res.body._id, "geronimo");
+        done();
+      });
+  });
+  // #14
+  test("delete an issue with missing _id", function (done) {
+    chai
+      .request(server)
+      .delete("/api/issues/apitest")
+      .end(function (err, res) {
+        assert.equal(res.body.error, "missing _id");
+        done();
+      });
+  });
 });
