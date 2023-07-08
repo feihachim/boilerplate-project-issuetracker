@@ -65,4 +65,34 @@ suite("Functional Tests", function () {
         done();
       });
   });
+  // #4
+  test("view issues on a project", function (done) {
+    chai
+      .request(server)
+      .get("/api/issues/apitest")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        done();
+      });
+  });
+  // #5
+  test("view issues on a project with a filter", function (done) {
+    chai
+      .request(server)
+      .get("/api/issues/apitest?open=false")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        done();
+      });
+  });
+  // #6
+  test("view issues on a project with multiple filters", function (done) {
+    chai
+      .request(server)
+      .get("/api/issues/apitest?created_by=Joe&open=true")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        done();
+      });
+  });
 });
