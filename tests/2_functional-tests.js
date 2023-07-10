@@ -6,7 +6,7 @@ const server = require("../server");
 chai.use(chaiHttp);
 
 suite("Functional Tests", function () {
-  /* // #1
+  // #1
   test("create an issue with every field", function (done) {
     chai
       .request(server)
@@ -96,10 +96,101 @@ suite("Functional Tests", function () {
       });
   });
   // #7
+  test("update one field on an issue", function (done) {
+    chai
+      .request(server)
+      .post("/api/issues/apitest")
+      .send({
+        issue_title: "test update issue field",
+        issue_text: "Beta",
+        created_by: "Betadine",
+      })
+      .end(function (err, res) {
+        const _id = res.body._id;
+        chai
+          .request(server)
+          .put("/api/issues/apitest")
+          .send({ _id: _id, issue_text: "Better test for text" })
+          .end(function (err, res) {
+            assert.equal(res.body.result, "successfully updated");
+            assert.equal(res.body._id, _id);
+            done();
+          });
+      });
+  });
   // #8
+  test("update multiple fields on an issue", function (done) {
+    chai
+      .request(server)
+      .post("/api/issues/apitest")
+      .send({
+        issue_title: "last test",
+        issue_text: "bad text",
+        created_by: "Megan",
+      })
+      .end(function (err, res) {
+        const _id = res.body._id;
+        chai
+          .request(server)
+          .put("/api/issues/apitest")
+          .send({
+            _id: _id,
+            issue_title: "ending",
+            issue_text: "Hopefully done",
+          })
+          .end(function (err, res) {
+            assert.equal(res.body.result, "successfully updated");
+            assert.equal(res.body._id, _id);
+            done();
+          });
+      });
+  });
   // #9
+  test("update an issue with missing _id", function (done) {
+    chai
+      .request(server)
+      .put("/api/issues/apitest")
+      .send({ issue_title: "Majin Boo" })
+      .end(function (err, res) {
+        assert.equal(res.body.error, "missing _id");
+        done();
+      });
+  });
   // #10
+  test("update an issue with no fields to update", function (done) {
+    chai
+      .request(server)
+      .post("/api/issues/apitest")
+      .send({
+        issue_title: "test no update",
+        issue_text: "random text",
+        created_by: "Alpha",
+      })
+      .end(function (err, res) {
+        const _id = res.body._id;
+        chai
+          .request(server)
+          .put("/api/issues/apitest")
+          .send({ _id: _id })
+          .end(function (err, res) {
+            assert.equal(res.body.error, "no update field(s) sent");
+            assert.equal(res.body._id, _id);
+            done();
+          });
+      });
+  });
   // #11
+  test("update an issue with an invalid _id", function (done) {
+    chai
+      .request(server)
+      .put("/api/issues/apitest")
+      .send({ _id: "gogeta", issue_title: "Ryu specter" })
+      .end(function (err, res) {
+        assert.equal(res.body.error, "could not update");
+        assert.equal(res.body._id, "gogeta");
+        done();
+      });
+  });
   // #12
   test("delete an issue", function (done) {
     chai
@@ -142,5 +233,5 @@ suite("Functional Tests", function () {
         assert.equal(res.body.error, "missing _id");
         done();
       });
-  });*/
+  });
 });
